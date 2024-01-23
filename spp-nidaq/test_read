@@ -1,0 +1,13 @@
+#!/usr/bin/tclsh
+
+package require Device2
+
+set task [Device2::ask nidaq task_create]
+
+Device2::ask nidaq task_add_chan_aivolt $task PXI1Slot4/ai0 -10 10
+Device2::ask nidaq task_add_chan_aivolt $task PXI1Slot4/ai1 -10 10
+Device2::ask nidaq task_set_timing $task 1e2 500
+Device2::ask nidaq task_start $task
+Device2::ask nidaq task_wait $task 10
+puts [Device2::ask nidaq task_read_analog $task 500 1]
+Device2::ask nidaq task_clear $task

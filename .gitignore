@@ -1,0 +1,7 @@
+*.deps
+*.o
+*.a
+*.test
+*.test.passed
+*.man
+*.1
