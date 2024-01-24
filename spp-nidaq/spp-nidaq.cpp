@@ -65,6 +65,7 @@ run_command(const std::vector<std::string> &args) {
       "\n"
       "task_add_chan_aivolt <task> <chan> <vmin> <vmax>"
       "task_set_timing <task> <rate> <count>"
+      "   use count=0 for continuous sampling"
       "task_read_analog <task> <count> <timeout>"
     ;
     return;
@@ -178,8 +179,9 @@ run_command(const std::vector<std::string> &args) {
     TaskHandle task = str_to_type<TaskHandle>(args[1]);
     float64 rate = str_to_type<float64>(args[2]);
     uInt64 count = str_to_type<uInt64>(args[3]);
+    int32 mode = count==0? DAQmx_Val_ContSamps : DAQmx_Val_FiniteSamps;
     daqmx_err( DAQmxCfgSampClkTiming(task, "",
-      rate, DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, count));
+      rate, DAQmx_Val_Rising, mode, count));
     return;
   }
 
