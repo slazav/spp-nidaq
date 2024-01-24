@@ -1,0 +1,20 @@
+#!/usr/bin/tclsh
+
+package require Device2
+
+set rate 100
+set samples 200
+
+set task [Device2::ask nidaq task_create]
+puts "Task:    $task"
+puts "Rate:    $rate Hz"
+puts "Samples: $samples"
+
+Device2::ask nidaq task_add_chan_aivolt $task PXI1Slot4/ai0 -10 10
+Device2::ask nidaq task_add_chan_aivolt $task PXI1Slot4/ai1 -10 10
+Device2::ask nidaq task_set_timing $task $rate $samples
+Device2::ask nidaq task_start $task
+Device2::ask nidaq task_wait $task 10
+puts [Device2::ask nidaq task_read_analog $task $samples 1]
+Device2::ask nidaq task_clear $task
+

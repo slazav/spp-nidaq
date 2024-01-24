@@ -1,0 +1,40 @@
+#!/usr/bin/tclsh
+
+package require Device2
+
+set rate 10
+
+Device2::ask nidaq device_reset PXI1Slot4
+
+set task [Device2::ask nidaq task_create]
+puts "Task:    $task"
+puts "Rate:    $rate Hz"
+
+Device2::ask nidaq task_add_chan_aivolt $task PXI1Slot4/ai0 -10 10
+Device2::ask nidaq task_add_chan_aivolt $task PXI1Slot4/ai1 -10 10
+Device2::ask nidaq task_set_timing $task $rate 0
+Device2::ask nidaq task_start $task
+
+proc get_data {} {
+  global task rate
+  # read up to $rate points with 5s timeout
+  puts "Get data"
+  set out [Device2::ask nidaq task_read_analog $task $rate 5]
+  puts $out
+  # repeat after 1s
+  after 1000 get_data
+}
+
+proc finish {} {
+  global task
+  gets stdin
+  puts "Stopping task"
+  Device2::ask nidaq task_stop $task
+  Device2::ask nidaq task_clear $task
+  exit
+}
+
+get_data
+
+fileevent stdin readable finish
+vwait forever
