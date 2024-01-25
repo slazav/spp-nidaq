@@ -1,0 +1,27 @@
+#!/bin/sh -efu
+
+# Copy some modules from my source library (mapsoft2-libs).
+# Usage: update_modules <path to the library>
+
+modules="err opt read_words"
+files="Makefile Makefile.inc get_deps .gitignore"
+
+srcdir="$1"
+moddir="modules"
+
+mkdir -p "$moddir"
+
+for m in $modules $files; do
+  rm -rf "$moddir/$m"
+  cp -r "$srcdir/$m" "$moddir"
+done
+
+cat > $moddir/Readme.md <<EOF
+This folder contains some modules from mapsoft2-libs source code library:
+https://github.com/slazav/mapsoft2-libs
+
+Modules are copied locally by update_moddir script.
+Update time: $(date "+%F %X")
+Commit: $(git -C "$moddir" rev-parse HEAD)
+
+EOF
