@@ -9,4 +9,4 @@ prefix     ?= $(DESTDIR)/usr
 bindir     ?= $(prefix)/bin
 
 install: all
-	nstall -D -m755 ${srcdir}/spp-nidaq -t ${bindir}
+	install -D -m755 ${srcdir}/spp-nidaq -t ${bindir}

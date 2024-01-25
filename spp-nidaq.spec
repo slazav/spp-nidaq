@@ -19,7 +19,6 @@ SPP interface to NI DAQ devices (via NIDAQmx library)
 %setup -q
 
 %build
-tar -xvf modules.tar
 %make
 
 %install
